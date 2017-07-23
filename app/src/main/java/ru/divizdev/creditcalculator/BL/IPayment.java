@@ -5,6 +5,7 @@ package ru.divizdev.creditcalculator.BL;
  */
 public interface IPayment {
 
-    double getRemainder();
+    double getBalance();
 
+    double getPercent();
 }

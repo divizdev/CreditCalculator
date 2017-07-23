@@ -23,9 +23,11 @@ public class AnnuityCalculation implements  ICalculation{
 
         for (int i = 0; i < months; i++) {
 
-            _paymentList.add(new Payment(remainder));
+            double percent = remainder * percentMonth;
 
-            remainder = remainder - ( _monthlyPayment -  remainder * percentMonth);
+            _paymentList.add(new Payment(remainder, percent));
+
+            remainder = remainder - ( _monthlyPayment -  percent);
 
         }
     }

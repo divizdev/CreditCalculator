@@ -23,7 +23,7 @@ public class CreditCalculatorTest {
 //    2 месяц
 //    Остаток кредита: 100000 – 16322,81 = 83677,19
 //    Проценты: 83677,19 * 0,1/12 = 697,31
-//    Основной долг: 17156,14 – 697,31 = 16458,83
+//    Основной долг: 17156,14 – 697,31 = 1458,83
 //    3 месяц
 //    Остаток кредита: 83677,19 — 16458,83 = 67218,36
 //    Проценты: 67218,36 *0,1/12 = 560,15
@@ -75,7 +75,7 @@ public class CreditCalculatorTest {
     @Test
     public void secondPaymentRemainder() throws Exception{
 
-        assertEquals(83677.19, _calculation.getPayment(1).getRemainder(), 2);
+        assertEquals(83677.19, _calculation.getPayment(1).getBalance(), 2);
 
     }
 
@@ -83,15 +83,29 @@ public class CreditCalculatorTest {
     @Test
     public void fifthPaymentRemainder() throws Exception{
 
-        assertEquals(33888.09, _calculation.getPayment(4).getRemainder(), 2);
+        assertEquals(33888.09, _calculation.getPayment(4).getBalance(), 2);
 
     }
 
     @Test
     public void lastPaymentRemainder() throws Exception{
 
-        assertEquals(17014.35, _calculation.getPayment(5).getRemainder(), 2);
+        assertEquals(17014.35, _calculation.getPayment(5).getBalance(), 2);
 
     }
+
+    @Test
+    public void secondPaymentPercent() throws Exception{
+        assertEquals(697.31, _calculation.getPayment(1).getPercent(), 2);
+
+    }
+
+    @Test
+    public void lastPaymentPercent() throws Exception{
+
+        assertEquals(141.79, _calculation.getPayment(5).getPercent(), 2);
+
+    }
+
 }
 
