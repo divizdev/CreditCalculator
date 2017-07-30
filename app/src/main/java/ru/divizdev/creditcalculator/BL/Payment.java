@@ -7,12 +7,20 @@ public class Payment implements IPayment {
 
     private final double _balance;
     private final double _percent;
+    private final double _debt;
 
 
-    public Payment(double balance, double percent) {
+    /**
+     *
+     * @param balance - остаток кредита
+     * @param percent - проценты
+     * @param debt - основной платеж
+     */
+    public Payment(double balance, double percent, double debt) {
 
         _balance = balance;
         _percent = percent;
+        _debt = debt;
     }
 
     @Override
@@ -23,5 +31,15 @@ public class Payment implements IPayment {
     @Override
     public double getPercent() {
         return _percent;
+    }
+
+    @Override
+    public double getDebt() {
+        return _debt;
+    }
+
+    @Override
+    public double getAmount() {
+        return _percent + _debt;
     }
 }

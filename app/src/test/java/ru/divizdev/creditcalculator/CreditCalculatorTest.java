@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.divizdev.creditcalculator.BL.Calculator;
 import ru.divizdev.creditcalculator.BL.ICalculation;
+import ru.divizdev.creditcalculator.BL.TypeRepayment;
 
 import static org.junit.Assert.*;
 
@@ -23,7 +24,7 @@ public class CreditCalculatorTest {
 //    2 месяц
 //    Остаток кредита: 100000 – 16322,81 = 83677,19
 //    Проценты: 83677,19 * 0,1/12 = 697,31
-//    Основной долг: 17156,14 – 697,31 = 1458,83
+//    Основной долг: 17156,14 – 697,31 = 16458,83
 //    3 месяц
 //    Остаток кредита: 83677,19 — 16458,83 = 67218,36
 //    Проценты: 67218,36 *0,1/12 = 560,15
@@ -53,6 +54,11 @@ public class CreditCalculatorTest {
         _calculation = _calc.calculation(6, 10, 100000);
     }
 
+
+    /**
+     * Проверка ежемесячного платежа
+     * @throws Exception
+     */
     @Test
     public void simpleCalculate() throws Exception {
 
@@ -66,6 +72,10 @@ public class CreditCalculatorTest {
 
     }
 
+    /**
+     * Проверка переплаты
+     * @throws Exception
+     */
     @Test
     public void overpaymentCalculate() throws  Exception{
 
@@ -73,7 +83,7 @@ public class CreditCalculatorTest {
     }
 
     @Test
-    public void secondPaymentRemainder() throws Exception{
+    public void secondPaymentBalance() throws Exception{
 
         assertEquals(83677.19, _calculation.getPayment(1).getBalance(), 2);
 
@@ -81,14 +91,14 @@ public class CreditCalculatorTest {
 
 
     @Test
-    public void fifthPaymentRemainder() throws Exception{
+    public void fifthPaymentBalance() throws Exception{
 
         assertEquals(33888.09, _calculation.getPayment(4).getBalance(), 2);
 
     }
 
     @Test
-    public void lastPaymentRemainder() throws Exception{
+    public void lastPaymentBalance() throws Exception{
 
         assertEquals(17014.35, _calculation.getPayment(5).getBalance(), 2);
 
@@ -104,6 +114,31 @@ public class CreditCalculatorTest {
     public void lastPaymentPercent() throws Exception{
 
         assertEquals(141.79, _calculation.getPayment(5).getPercent(), 2);
+
+    }
+
+    @Test
+    public void secondPaymentDebt() throws Exception{
+
+        assertEquals(16458.83, _calculation.getPayment(1).getDebt(), 2);
+    }
+
+    /**
+     * Досрочное погашение, изменение размера платежа
+     *    2 месяц
+     *    Ежемесячная выплата 17 156,14
+     *    Частичнодосрочное погошение 20 0000
+     *    2 843,86
+     *    Остаток кредита: 100000 – 16322,81 - 2 843,86 = 80833,33
+     *    Проценты: 80833,33 * 0,1/12 = 673,61
+     *    Основной долг: 17156,14 – 697,31 = 16458,83
+     */
+    @Test
+    public void partiallyEarlyRepayment() throws  Exception{
+
+        _calculation.setRepayment(1, 20000, TypeRepayment.DecreasePayment);
+
+        assertEquals(20000, _calculation.getPayment(1).getAmount(), 2);
 
     }
 

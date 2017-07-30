@@ -10,6 +10,7 @@ public class AnnuityCalculation implements  ICalculation{
     private final double _overpayment;
     private double _monthlyPayment;
     private List<IPayment> _paymentList;
+    private final IPayment _nullPayment = new Payment(0, 0 , 0);
 
 
     public AnnuityCalculation(int months, int interestRate, int amountCredit) {
@@ -24,11 +25,11 @@ public class AnnuityCalculation implements  ICalculation{
         for (int i = 0; i < months; i++) {
 
             double percent = remainder * percentMonth;
+            double debt = ( _monthlyPayment -  percent);
 
-            _paymentList.add(new Payment(remainder, percent));
+            _paymentList.add(new Payment(remainder, percent, debt));
 
-            remainder = remainder - ( _monthlyPayment -  percent);
-
+            remainder = remainder - debt;
         }
     }
 
@@ -43,9 +44,24 @@ public class AnnuityCalculation implements  ICalculation{
 
     @Override
     public IPayment getPayment(int index) {
-        if (index>=0 && index < _paymentList.size()) {
+        if (isCorrectIndex(index)) {
             return _paymentList.get(index);
         }
-        return null;
+        return _nullPayment;
+    }
+    private boolean isCorrectIndex(int index){
+        return index>=0 && index < _paymentList.size();
+    }
+
+    @Override
+    public void setRepayment(int index, double payment, TypeRepayment decreasePayment) {
+        if (isCorrectIndex(index)) {
+
+            IPayment lastPayment = getPayment(index);
+            double delta = payment - lastPayment.getAmount();
+            _paymentList.set(index, new Payment(lastPayment.getBalance() - delta,
+                    lastPayment.getPercent(),
+                    lastPayment.getDebt() + delta));
+        }
     }
 }

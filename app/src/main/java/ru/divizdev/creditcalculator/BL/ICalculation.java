@@ -10,4 +10,6 @@ public interface ICalculation {
     double getOverpayment();
 
     IPayment getPayment(int index);
+
+    void setRepayment(int index, double payment, TypeRepayment decreasePayment);
 }

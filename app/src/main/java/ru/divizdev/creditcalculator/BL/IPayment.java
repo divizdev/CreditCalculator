@@ -5,7 +5,27 @@ package ru.divizdev.creditcalculator.BL;
  */
 public interface IPayment {
 
+    /**
+     * Остаток кредита
+     * @return
+     */
     double getBalance();
 
+    /**
+     * Проценты
+     * @return
+     */
     double getPercent();
+
+    /**
+     * Основной долг
+     * @return
+     */
+    double getDebt();
+
+    /**
+     * Сумма платежа
+     * @return
+     */
+    double getAmount();
 }
