@@ -12,7 +12,7 @@ public class Payment implements IPayment {
 
     /**
      *
-     * @param balance - остаток кредита
+     * @param balance - остаток кредита на начало месяца
      * @param percent - проценты
      * @param debt - основной платеж
      */

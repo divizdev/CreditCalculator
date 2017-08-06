@@ -60,14 +60,12 @@ public class CreditCalculatorTest {
      * @throws Exception
      */
     @Test
-    public void simpleCalculate() throws Exception {
+    public void testMonthlyPayment() throws Exception {
 
         ICalculation calculation;
 
         calculation = _calc.calculation(36, 20, 1000000);
         assertEquals(37163.58, calculation.getMonthlyPayment(), 2);
-
-
         assertEquals(17156.14, _calculation.getMonthlyPayment(),  2);
 
     }
@@ -83,62 +81,48 @@ public class CreditCalculatorTest {
     }
 
     @Test
-    public void secondPaymentBalance() throws Exception{
-
+    public void testPaymentBalance() throws Exception{
         assertEquals(83677.19, _calculation.getPayment(1).getBalance(), 2);
-
-    }
-
-
-    @Test
-    public void fifthPaymentBalance() throws Exception{
-
         assertEquals(33888.09, _calculation.getPayment(4).getBalance(), 2);
-
-    }
-
-    @Test
-    public void lastPaymentBalance() throws Exception{
-
         assertEquals(17014.35, _calculation.getPayment(5).getBalance(), 2);
-
     }
 
+
+
+
     @Test
-    public void secondPaymentPercent() throws Exception{
+    public void testPaymentPercent() throws Exception{
         assertEquals(697.31, _calculation.getPayment(1).getPercent(), 2);
-
-    }
-
-    @Test
-    public void lastPaymentPercent() throws Exception{
-
         assertEquals(141.79, _calculation.getPayment(5).getPercent(), 2);
 
     }
 
+
     @Test
-    public void secondPaymentDebt() throws Exception{
+    public void testPaymentDebt() throws Exception{
 
         assertEquals(16458.83, _calculation.getPayment(1).getDebt(), 2);
     }
 
+    @Test
+    public void testNullGetPayment() throws Exception{
+        assertEquals(0, _calculation.getPayment(-1).getBalance(), 2);
+        assertEquals(0, _calculation.getPayment(6).getDebt(), 2);
+        assertEquals(0, _calculation.getPayment(7).getAmount(), 2);
+        assertEquals(0, _calculation.getPayment(700).getPercent(), 2);
+
+    }
+
     /**
      * Досрочное погашение, изменение размера платежа
-     *    2 месяц
-     *    Ежемесячная выплата 17 156,14
-     *    Частичнодосрочное погошение 20 0000
-     *    2 843,86
-     *    Остаток кредита: 100000 – 16322,81 - 2 843,86 = 80833,33
-     *    Проценты: 80833,33 * 0,1/12 = 673,61
-     *    Основной долг: 17156,14 – 697,31 = 16458,83
      */
     @Test
     public void partiallyEarlyRepayment() throws  Exception{
 
-        _calculation.setRepayment(1, 20000, TypeRepayment.DecreasePayment);
+        _calculation.setRepayment(2, 20000, TypeRepayment.DecreasePayment);
 
-        assertEquals(20000, _calculation.getPayment(1).getAmount(), 2);
+        assertEquals(20000, _calculation.getPayment(2).getAmount(), 2);
+        assertEquals(47218.36, _calculation.getPayment(3).getBalance(), 2);
 
     }
 
