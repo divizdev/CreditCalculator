@@ -28,4 +28,6 @@ public interface IPayment {
      * @return
      */
     double getAmount();
+
+
 }

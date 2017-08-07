@@ -9,15 +9,16 @@ import java.util.List;
 public class AnnuityCalculation implements ICalculation {
     private final double _overpayment;
     private final IPayment _nullPayment = new Payment(0, 0, 0);
-    private final double _monthlyPayment;
     private List<IPayment> _paymentList;
     private int _months;
+    private final int _interestRate;
 
 
     public AnnuityCalculation(int months, int interestRate, int amountCredit) {
+        _interestRate = interestRate;
         double percentMonth = interestRate / 12f / 100f;
-        _monthlyPayment = amountCredit * (percentMonth + percentMonth / (Math.pow((1 + percentMonth), months) - 1));
-        _overpayment = _monthlyPayment * months - amountCredit;
+        double monthlyPayment = amountCredit * (percentMonth + percentMonth / (Math.pow((1 + percentMonth), months) - 1));
+        _overpayment = monthlyPayment * months - amountCredit;
         _months = months;
         _paymentList = new ArrayList<>(months);
 
@@ -26,7 +27,7 @@ public class AnnuityCalculation implements ICalculation {
         for (int i = 0; i < _months; i++) {
 
             double percent = remainder * percentMonth;
-            double debt = (_monthlyPayment - percent);
+            double debt = (monthlyPayment - percent);
 
             _paymentList.add(new Payment(remainder, percent, debt));
 
@@ -34,9 +35,6 @@ public class AnnuityCalculation implements ICalculation {
         }
     }
 
-    public double getMonthlyPayment() {
-        return _monthlyPayment;
-    }
 
     @Override
     public double getOverpayment() {
@@ -84,6 +82,17 @@ public class AnnuityCalculation implements ICalculation {
         _paymentList.set(index, new Payment(lastPayment.getBalance() - delta,
                 lastPayment.getPercent(),
                 lastPayment.getDebt() + delta));
+
+        double percentMonth = _interestRate / 12f / 100f;
+        double newBalance = (getPayment(index + 1).getBalance() - delta);
+        double monthlyPayment = (newBalance * (percentMonth + percentMonth / (Math.pow((1 + percentMonth), _months - index) - 1)));
+
+        for (int i = index + 1; i < _months; i++) {
+            double percent = newBalance * percentMonth;
+            _paymentList.set(i, new Payment(newBalance, percent, monthlyPayment - percent));
+            newBalance -= monthlyPayment;
+        }
+
 
     }
 }

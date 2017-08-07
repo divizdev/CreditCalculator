@@ -65,8 +65,8 @@ public class CreditCalculatorTest {
         ICalculation calculation;
 
         calculation = _calc.calculation(36, 20, 1000000);
-        assertEquals(37163.58, calculation.getMonthlyPayment(), 2);
-        assertEquals(17156.14, _calculation.getMonthlyPayment(),  2);
+        assertEquals(37163.58, calculation.getPayment(0).getAmount(), 2);
+        assertEquals(17156.14, _calculation.getPayment(0).getAmount(),  2);
 
     }
 
@@ -122,7 +122,7 @@ public class CreditCalculatorTest {
         _calculation.setRepayment(2, 20000, TypeRepayment.DecreasePayment);
 
         assertEquals(20000, _calculation.getPayment(2).getAmount(), 2);
-        assertEquals(47218.36, _calculation.getPayment(3).getBalance(), 2);
+        assertEquals(47778.52, _calculation.getPayment(3).getBalance(), 2);
 
     }
 

@@ -5,7 +5,6 @@ package ru.divizdev.creditcalculator.BL;
  */
 public interface ICalculation {
 
-    double getMonthlyPayment();
 
     double getOverpayment();
 
