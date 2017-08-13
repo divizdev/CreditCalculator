@@ -80,6 +80,10 @@ public class CreditCalculatorTest {
         assertEquals(2936.84, _calculation.getOverpayment(), 2);
     }
 
+    /**
+     * Тест остатка
+     * @throws Exception
+     */
     @Test
     public void testPaymentBalance() throws Exception{
         assertEquals(83677.19, _calculation.getPayment(1).getBalance(), 2);
@@ -88,8 +92,10 @@ public class CreditCalculatorTest {
     }
 
 
-
-
+    /**
+     * Тест выплачиваемых процентов
+     * @throws Exception
+     */
     @Test
     public void testPaymentPercent() throws Exception{
         assertEquals(697.31, _calculation.getPayment(1).getPercent(), 2);
@@ -98,12 +104,20 @@ public class CreditCalculatorTest {
     }
 
 
+    /**
+     * Тест основной выплаты
+     * @throws Exception
+     */
     @Test
     public void testPaymentDebt() throws Exception{
 
         assertEquals(16458.83, _calculation.getPayment(1).getDebt(), 2);
     }
 
+    /**
+     * Тест нулевого платежа
+     * @throws Exception
+     */
     @Test
     public void testNullGetPayment() throws Exception{
         assertEquals(0, _calculation.getPayment(-1).getBalance(), 2);
@@ -123,6 +137,20 @@ public class CreditCalculatorTest {
 
         assertEquals(20000, _calculation.getPayment(2).getAmount(), 2);
         assertEquals(47778.52, _calculation.getPayment(3).getBalance(), 2);
+
+    }
+
+    /**
+     * Досрочное погашение уменьшаем срок кредита
+     * @throws Exception
+     */
+    @Test
+    public void testPartiallyEarlyRepaymentDecreaseTerm() throws Exception{
+
+        _calculation.setRepayment(2, 33890.43, TypeRepayment.DecreaseTerm);
+
+        assertEquals(33330.28, _calculation.getPayment(2).getDebt(), 2);
+        assertEquals(0 , _calculation.getPayment(5).getAmount(), 2);
 
     }
 
