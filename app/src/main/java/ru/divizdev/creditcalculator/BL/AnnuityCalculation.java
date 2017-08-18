@@ -55,28 +55,48 @@ public class AnnuityCalculation implements ICalculation {
 
     /**
      * Установить переплату
-     * @param index - месяц
-     * @param payment - общая сумма платежа
+     *
+     * @param index         - месяц
+     * @param payment       - общая сумма платежа
      * @param typeRepayment - тип переплаты
      */
     @Override
     public void setRepayment(int index, double payment, TypeRepayment typeRepayment) {
         if (isCorrectIndex(index)) {
             switch (typeRepayment) {
+                case DecreaseTerm:
+                    setDecreaseTerm(index, payment);
+                    break;
                 case DecreasePayment:
                     setDecreasePayment(index, payment);
                     break;
             }
-
         }
     }
 
     /**
-     * Переплата с уменьшением платежа
-     * @param index месяц, <b>нет</b> проверки на границы
+     * Переплата с уменьшением срока
+     *
+     * @param index   месяц, <b>нет</b> проверки на границы
      * @param payment общая сумма платежа за месяц
      */
-    private void setDecreasePayment(int index, double payment){
+    private void setDecreaseTerm(int index, double payment) {
+        IPayment lastPayment = getPayment(index);
+        double delta = payment - lastPayment.getAmount();
+        double newBalance = lastPayment.getBalance() - delta;
+        _paymentList.set(index, new Payment(newBalance, lastPayment.getPercent(),
+                lastPayment.getDebt() + delta));
+
+
+    }
+
+    /**
+     * Переплата с уменьшением платежа
+     *
+     * @param index   месяц, <b>нет</b> проверки на границы
+     * @param payment общая сумма платежа за месяц
+     */
+    private void setDecreasePayment(int index, double payment) {
         IPayment lastPayment = getPayment(index);
         double delta = payment - lastPayment.getAmount();
         _paymentList.set(index, new Payment(lastPayment.getBalance() - delta,

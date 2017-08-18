@@ -149,6 +149,7 @@ public class CreditCalculatorTest {
 
         _calculation.setRepayment(2, 33890.43, TypeRepayment.DecreaseTerm);
 
+        assertEquals(33890.43, _calculation.getPayment(2).getAmount(), 2  );
         assertEquals(33330.28, _calculation.getPayment(2).getDebt(), 2);
         assertEquals(0 , _calculation.getPayment(5).getAmount(), 2);
 
