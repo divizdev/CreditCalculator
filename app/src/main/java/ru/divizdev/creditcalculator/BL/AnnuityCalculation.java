@@ -5,39 +5,96 @@ import java.util.List;
 
 /**
  * Created by diviz on 22.07.2017.
+ * Расчет аннуитетного платежа
  */
 public class AnnuityCalculation implements ICalculation {
 
     private final IPayment _nullPayment = new Payment(0, 0, 0);
-    private final int _interestRate;
-    private List<IPayment> _paymentList;
-    private int _months;
+
+    private final List<IPayment> _paymentList;
+    private final int _months;
+    private final double _percentMonth;
 
 
-    public AnnuityCalculation(int months, int interestRate, double amountCredit) {
-        _interestRate = interestRate;
-        double percentMonth = interestRate / 12f / 100f;
-        double monthlyPayment = calcMonthlyPayment(months, amountCredit, percentMonth);
+    AnnuityCalculation(int months, double interestRate, double amountCredit) {
+        _percentMonth = interestRate / 12f / 100f;
         _months = months;
         _paymentList = new ArrayList<>(months);
 
-        double remainder = amountCredit;
+        double balance = amountCredit;
+        double monthlyPayment = calcMonthlyPayment(months, balance, _percentMonth);
 
         for (int i = 0; i < _months; i++) {
 
-            double percent = remainder * percentMonth;
-            double debt = (monthlyPayment - percent);
+            double percent = balance * _percentMonth;
+            double debt = monthlyPayment - percent;
 
-            _paymentList.add(new Payment(remainder, percent, debt));
+            _paymentList.add(new Payment(balance, percent, debt));
 
-            remainder = remainder - debt;
+            balance -= debt;
         }
+    }
+
+    /**
+     * Переплата с уменьшением срока
+     *
+     * @param index   месяц, <b>нет</b> проверки на границы
+     * @param payment общая сумма платежа за месяц
+     */
+    private void setDecreaseTerm(int index, double payment) {
+        IPayment lastPayment = getPayment(index);
+        double delta = payment - lastPayment.getAmount();
+
+
+        _paymentList.set(index, new Payment(lastPayment.getBalance(), lastPayment.getPercent(),
+                lastPayment.getDebt() + delta));
+
+        double newBalance = lastPayment.getBalance() - (lastPayment.getDebt() + delta);
+        double monthlyPayment = lastPayment.getAmount();
+
+        for (int i = index + 1; i < _months; i++) {
+            double percent = newBalance * _percentMonth;
+            double debt = monthlyPayment - percent;
+            if (debt > newBalance) {
+                debt = newBalance;
+            }
+            _paymentList.set(i, new Payment(newBalance, percent, debt));
+            newBalance -= debt;
+        }
+
+
+    }
+
+
+    /**
+     * Переплата с уменьшением платежа
+     *
+     * @param index   месяц, <b>нет</b> проверки на границы
+     * @param payment общая сумма платежа за месяц
+     */
+    private void setDecreasePayment(int index, double payment) {
+        IPayment lastPayment = getPayment(index);
+        double delta = payment - lastPayment.getAmount();
+        _paymentList.set(index, new Payment(lastPayment.getBalance(),
+                lastPayment.getPercent(),
+                lastPayment.getDebt() + delta));
+
+        double newBalance = (lastPayment.getBalance() - (lastPayment.getDebt() + delta));
+        double monthlyPayment = calcMonthlyPayment(_months - index - 1, newBalance, _percentMonth);
+
+        for (int i = index + 1; i < _months; i++) {
+            double percent = newBalance * _percentMonth;
+            double debt = monthlyPayment - percent;
+            _paymentList.set(i, new Payment(newBalance, percent, debt));
+            newBalance -= debt;
+        }
+
+
     }
 
     private double calcMonthlyPayment(int months, double amountCredit, double percentMonth) {
         return amountCredit * (percentMonth + percentMonth / (Math.pow((1 + percentMonth), months) - 1));
     }
-
 
     @Override
     public double getOverpayment() {
@@ -82,63 +139,5 @@ public class AnnuityCalculation implements ICalculation {
                     break;
             }
         }
-    }
-
-    /**
-     * Переплата с уменьшением срока
-     *
-     * @param index   месяц, <b>нет</b> проверки на границы
-     * @param payment общая сумма платежа за месяц
-     */
-    private void setDecreaseTerm(int index, double payment) {
-        IPayment lastPayment = getPayment(index);
-        double delta = payment - lastPayment.getAmount();
-
-
-        _paymentList.set(index, new Payment(lastPayment.getBalance(), lastPayment.getPercent(),
-                lastPayment.getDebt() + delta));
-
-        double newBalance = lastPayment.getBalance() - (lastPayment.getDebt() + delta);
-        double percentMonth = _interestRate / 12f / 100f;
-        double monthlyPayment = lastPayment.getAmount();
-
-        for (int i = index + 1; i < _months; i++) {
-            double percent = newBalance * percentMonth;
-            double debt = monthlyPayment - percent;
-            if (debt > newBalance) {
-                debt = newBalance;
-            }
-            _paymentList.set(i, new Payment(newBalance, percent, debt));
-            newBalance = newBalance - debt;
-        }
-
-
-    }
-
-    /**
-     * Переплата с уменьшением платежа
-     *
-     * @param index   месяц, <b>нет</b> проверки на границы
-     * @param payment общая сумма платежа за месяц
-     */
-    private void setDecreasePayment(int index, double payment) {
-        IPayment lastPayment = getPayment(index);
-        double delta = payment - lastPayment.getAmount();
-        _paymentList.set(index, new Payment(lastPayment.getBalance(),
-                lastPayment.getPercent(),
-                lastPayment.getDebt() + delta));
-
-        double percentMonth = _interestRate / 12f / 100f;
-        double newBalance = (lastPayment.getBalance() - (lastPayment.getDebt() + delta));
-        double monthlyPayment = calcMonthlyPayment(_months - index - 1, newBalance, percentMonth);
-
-        for (int i = index + 1; i < _months; i++) {
-            double percent = newBalance * percentMonth;
-            double debt = monthlyPayment - percent;
-            _paymentList.set(i, new Payment(newBalance, percent, debt));
-            newBalance -= debt;
-        }
-
-
     }
 }
