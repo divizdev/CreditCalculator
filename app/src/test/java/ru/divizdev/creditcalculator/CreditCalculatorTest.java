@@ -43,12 +43,11 @@ public class CreditCalculatorTest {
 //    Основной долг: 17156,14 – 141,79 = 17014,35
 
 
-
     private Calculator _calc;
     private ICalculation _calculation;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         _calc = new Calculator();
 
         _calculation = _calc.calculation(6, 10, 100000);
@@ -57,6 +56,7 @@ public class CreditCalculatorTest {
 
     /**
      * Проверка ежемесячного платежа
+     *
      * @throws Exception
      */
     @Test
@@ -66,26 +66,49 @@ public class CreditCalculatorTest {
 
         calculation = _calc.calculation(36, 20, 1000000);
         assertEquals(37163.58, calculation.getPayment(0).getAmount(), 2);
-        assertEquals(17156.14, _calculation.getPayment(0).getAmount(),  2);
+        assertEquals(17156.14, _calculation.getPayment(0).getAmount(), 2);
 
     }
 
     /**
      * Проверка переплаты
+     *
      * @throws Exception
      */
     @Test
-    public void overpaymentCalculate() throws  Exception{
-
+    public void testOverpaymentCalculate() throws Exception {
         assertEquals(2936.84, _calculation.getOverpayment(), 2);
     }
 
     /**
-     * Тест остатка
+     * Проверка переплаты c уменьшением платежа
+     *
      * @throws Exception
      */
     @Test
-    public void testPaymentBalance() throws Exception{
+    public void testOverpaymentCalculateDecreasePayment() throws Exception {
+        _calculation.setRepayment(2, 20000, TypeRepayment.DecreasePayment);
+        assertEquals(2889.31, _calculation.getOverpayment(), 2);
+    }
+
+    /**
+     * Проверка переплаты c уменьшением срока
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testOverpaymentCalculateDecreaseTerm() throws Exception {
+        _calculation.setRepayment(2, 33890.43, TypeRepayment.DecreaseTerm);
+        assertEquals(2514.98, _calculation.getOverpayment(), 2);
+    }
+
+    /**
+     * Тест остатка
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPaymentBalance() throws Exception {
         assertEquals(83677.19, _calculation.getPayment(1).getBalance(), 2);
         assertEquals(33888.09, _calculation.getPayment(4).getBalance(), 2);
         assertEquals(17014.35, _calculation.getPayment(5).getBalance(), 2);
@@ -94,10 +117,11 @@ public class CreditCalculatorTest {
 
     /**
      * Тест выплачиваемых процентов
+     *
      * @throws Exception
      */
     @Test
-    public void testPaymentPercent() throws Exception{
+    public void testPaymentPercent() throws Exception {
         assertEquals(697.31, _calculation.getPayment(1).getPercent(), 2);
         assertEquals(141.79, _calculation.getPayment(5).getPercent(), 2);
 
@@ -106,20 +130,22 @@ public class CreditCalculatorTest {
 
     /**
      * Тест основной выплаты
+     *
      * @throws Exception
      */
     @Test
-    public void testPaymentDebt() throws Exception{
+    public void testPaymentDebt() throws Exception {
 
         assertEquals(16458.83, _calculation.getPayment(1).getDebt(), 2);
     }
 
     /**
      * Тест нулевого платежа
+     *
      * @throws Exception
      */
     @Test
-    public void testNullGetPayment() throws Exception{
+    public void testNullGetPayment() throws Exception {
         assertEquals(0, _calculation.getPayment(-1).getBalance(), 2);
         assertEquals(0, _calculation.getPayment(6).getDebt(), 2);
         assertEquals(0, _calculation.getPayment(7).getAmount(), 2);
@@ -131,29 +157,62 @@ public class CreditCalculatorTest {
      * Досрочное погашение, изменение размера платежа
      */
     @Test
-    public void partiallyEarlyRepayment() throws  Exception{
+    public void testPartiallyEarlyRepaymentDecreasePayment() throws Exception {
 
         _calculation.setRepayment(2, 20000, TypeRepayment.DecreasePayment);
 
-        assertEquals(20000, _calculation.getPayment(2).getAmount(), 2);
-        assertEquals(47778.52, _calculation.getPayment(3).getBalance(), 2);
+        assertEquals("Не верный остаток на начало периода",67218.36,
+                _calculation.getPayment(2).getBalance(),2 );
 
+        assertEquals(20000, _calculation.getPayment(2).getAmount(), 2);
+        assertEquals(16192.34, _calculation.getPayment(3).getAmount(), 2);
+        assertEquals(16192.34, _calculation.getPayment(4).getAmount(), 2);
+
+        assertEquals(47778.52, _calculation.getPayment(3).getBalance(), 2);
+        assertEquals(31984.33, _calculation.getPayment(4).getBalance(), 2);
+        assertEquals(16058.52, _calculation.getPayment(5).getBalance(), 2);
+
+        assertEquals(15794.19, _calculation.getPayment(3).getDebt(), 2);
+        assertEquals(15925.81, _calculation.getPayment(4).getDebt(),2);
+        assertEquals(16058.52, _calculation.getPayment(5).getDebt(),2);
+
+        assertEquals(398.15, _calculation.getPayment(3).getPercent(),2);
+        assertEquals(266.54, _calculation.getPayment(4).getPercent(),2);
+        assertEquals(133.82, _calculation.getPayment(5).getPercent(),2);
     }
 
     /**
      * Досрочное погашение уменьшаем срок кредита
+     *
      * @throws Exception
      */
     @Test
-    public void testPartiallyEarlyRepaymentDecreaseTerm() throws Exception{
+    public void testPartiallyEarlyRepaymentDecreaseTerm() throws Exception {
 
         _calculation.setRepayment(2, 33890.43, TypeRepayment.DecreaseTerm);
 
-        assertEquals(33890.43, _calculation.getPayment(2).getAmount(), 2  );
+        assertEquals("Не верный остаток на начало периода", 67218.36,
+                _calculation.getPayment(2).getBalance(), 2);
+
+        assertEquals("Не верный общий платеж",33890.43, _calculation.getPayment(2).getAmount(), 2);
+
         assertEquals(33330.28, _calculation.getPayment(2).getDebt(), 2);
-        assertEquals(0 , _calculation.getPayment(5).getAmount(), 2);
+        assertEquals(16873.74, _calculation.getPayment(3).getDebt(), 2);
+        assertEquals(17014.35, _calculation.getPayment(4).getDebt(), 2);
+        assertEquals(0, _calculation.getPayment(5).getDebt(), 2);
+
+        assertEquals(560.15, _calculation.getPayment(2).getPercent(), 2);
+        assertEquals(282.40, _calculation.getPayment(3).getPercent(), 2);
+        assertEquals(141.79, _calculation.getPayment(4).getPercent(), 2);
+        assertEquals(0.00, _calculation.getPayment(5).getPercent(), 2);
+
+        assertEquals("Не верный остаток за 3 месяц", 33888.09,
+                _calculation.getPayment(3).getBalance(), 2);
+        assertEquals(17014.35, _calculation.getPayment(4).getBalance(), 2);
+        assertEquals(0, _calculation.getPayment(5).getBalance(), 2);
 
     }
+
 
 }
 
