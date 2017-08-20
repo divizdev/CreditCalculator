@@ -2,6 +2,7 @@ package ru.divizdev.creditcalculator.BL;
 
 /**
  * Created by diviz on 22.07.2017.
+ * Платеж по кредиту
  */
 public class Payment implements IPayment {
 
@@ -10,18 +11,20 @@ public class Payment implements IPayment {
     private final double _debt;
 
 
+
     /**
-     *
      * @param balance - остаток кредита на начало месяца
      * @param percent - проценты
-     * @param debt - основной платеж
+     * @param debt    - основной платеж
      */
-    public Payment(double balance, double percent, double debt) {
+    Payment(double balance, double percent, double debt) {
 
         _balance = balance;
         _percent = percent;
         _debt = debt;
     }
+
+
 
     @Override
     public double getBalance() {

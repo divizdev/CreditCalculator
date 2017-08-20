@@ -10,6 +10,7 @@ import static org.junit.Assert.*;
 
 /**
  * Created by diviz on 22.07.2017.
+ * Тест Аннуитентного платежа
  */
 public class CreditCalculatorTest {
 
@@ -210,6 +211,32 @@ public class CreditCalculatorTest {
                 _calculation.getPayment(3).getBalance(), 2);
         assertEquals(17014.35, _calculation.getPayment(4).getBalance(), 2);
         assertEquals(0, _calculation.getPayment(5).getBalance(), 2);
+
+    }
+
+
+    /**
+     * Досрочное погашение уменьшаем срок кредита и плтеж
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPartiallyEarlyRepaymentDecreaseTermAndPayment() throws Exception {
+
+        _calculation.setRepayment(3, 32118.15, TypeRepayment.DecreaseTerm);
+
+        _calculation.setRepayment(2, 20000, TypeRepayment.DecreasePayment);
+
+
+        assertEquals(19439.85, _calculation.getPayment(2).getDebt(), 2);
+        assertEquals(31720.00, _calculation.getPayment(3).getDebt(), 2);
+        assertEquals(16058.52 , _calculation.getPayment(4).getDebt(), 2);
+        assertEquals(0.00, _calculation.getPayment(5).getDebt(), 2);
+
+
+
+
+
 
     }
 

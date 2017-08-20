@@ -29,6 +29,10 @@ public class AnnuityCalculation implements ICalculation {
             double percent = balance * _percentMonth;
             double debt = monthlyPayment - percent;
 
+            if (debt > balance) {
+                debt = balance;
+            }
+
             _paymentList.add(new Payment(balance, percent, debt));
 
             balance -= debt;
@@ -55,6 +59,7 @@ public class AnnuityCalculation implements ICalculation {
         for (int i = index + 1; i < _months; i++) {
             double percent = newBalance * _percentMonth;
             double debt = monthlyPayment - percent;
+
             if (debt > newBalance) {
                 debt = newBalance;
             }
@@ -85,6 +90,9 @@ public class AnnuityCalculation implements ICalculation {
         for (int i = index + 1; i < _months; i++) {
             double percent = newBalance * _percentMonth;
             double debt = monthlyPayment - percent;
+            if (debt > newBalance) {
+                debt = newBalance;
+            }
             _paymentList.set(i, new Payment(newBalance, percent, debt));
             newBalance -= debt;
         }
