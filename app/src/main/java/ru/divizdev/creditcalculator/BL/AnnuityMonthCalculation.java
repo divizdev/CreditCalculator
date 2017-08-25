@@ -23,6 +23,30 @@ public class AnnuityMonthCalculation {
 
     }
 
+    public AnnuityMonthCalculation(AnnuityMonthCalculation lastCalculation){
+        _lastCalculation = lastCalculation;
+        _months = lastCalculation.getMonths();
+        _percentMonth = lastCalculation.getPercentMonth();
+
+        double balance = _lastCalculation.getPayment().getBalance() - _lastCalculation.getPayment().getDebt();
+        double percent = balance * _percentMonth;
+        double debt = _lastCalculation.getPayment().getAmount() - percent;
+        _payment = new Payment(balance, percent, debt);
+
+    }
+
+    public int getMonths() {
+        return _months;
+    }
+
+    public double getPercentMonth() {
+        return _percentMonth;
+    }
+
+    public AnnuityMonthCalculation getLastCalculation() {
+        return _lastCalculation;
+    }
+
     public IPayment getPayment(){
         return _payment;
     }
