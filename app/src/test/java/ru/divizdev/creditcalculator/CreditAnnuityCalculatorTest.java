@@ -2,9 +2,7 @@ package ru.divizdev.creditcalculator;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.divizdev.creditcalculator.BL.Calculator;
-import ru.divizdev.creditcalculator.BL.ICalculation;
-import ru.divizdev.creditcalculator.BL.TypeRepayment;
+import ru.divizdev.creditcalculator.BL.*;
 
 import static org.junit.Assert.*;
 
@@ -12,7 +10,7 @@ import static org.junit.Assert.*;
  * Created by diviz on 22.07.2017.
  * Тест Аннуитентного платежа
  */
-public class CreditCalculatorTest {
+public class CreditAnnuityCalculatorTest {
 
 //    Кредит в размере 100 000 р.
 //    Процентная ставка 10%.
@@ -223,9 +221,9 @@ public class CreditCalculatorTest {
     @Test
     public void testPartiallyEarlyRepaymentDecreaseTermAndPayment() throws Exception {
 
-        _calculation.setRepayment(3, 32118.15, TypeRepayment.DecreaseTerm);
-
         _calculation.setRepayment(2, 20000, TypeRepayment.DecreasePayment);
+
+        _calculation.setRepayment(3, 32118.15, TypeRepayment.DecreaseTerm);
 
 
         assertEquals(19439.85, _calculation.getPayment(2).getDebt(), 2);
@@ -233,10 +231,26 @@ public class CreditCalculatorTest {
         assertEquals(16058.52 , _calculation.getPayment(4).getDebt(), 2);
         assertEquals(0.00, _calculation.getPayment(5).getDebt(), 2);
 
+    }
 
 
+    //    Кредит в размере 100 000 р.
+//    Процентная ставка 10%.
+//    Сроком погашения кредита возьмём 6 месяцев.
+//    Для начала рассчитаем ежемесячный платёж = 17 156,14
 
+    //    1 месяц
+//    Проценты: 100000 * 0,1 / 12 = 833,33
+//    Основной долг: 17156,14 – 833, 33 = 16322,81
+//    2 месяц
+//    Остаток кредита: 100000 – 16322,81 = 83677,19
+//    Проценты: 83677,19 * 0,1/12 = 697,31
+//    Основной долг: 17156,14 – 697,31 = 16458,83
+    @Test
+    public void testSeparateCalculation() throws Exception {
 
+        ISeparateCalculation separateCalculation = new AnnuitySeparateCalculation(6, 10, 100000);
+        assertEquals(17156.14, separateCalculation.getPayment().getAmount(), 2);
 
     }
 

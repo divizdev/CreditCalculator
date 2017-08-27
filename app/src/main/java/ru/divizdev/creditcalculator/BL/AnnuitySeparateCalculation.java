@@ -1,14 +1,14 @@
 package ru.divizdev.creditcalculator.BL;
 
-public class AnnuityMonthCalculation {
+public class AnnuitySeparateCalculation implements ISeparateCalculation {
 
     private int _months;
     private double _percentMonth;
 
-    private AnnuityMonthCalculation _lastCalculation;
+    private ISeparateCalculation _lastCalculation;
     private IPayment _payment;
 
-    public AnnuityMonthCalculation(int months, double interestRate, double amountCredit){
+    public AnnuitySeparateCalculation(int months, double interestRate, double amountCredit){
 
         _months = months;
         _percentMonth = interestRate / 12f / 100f;
@@ -23,7 +23,7 @@ public class AnnuityMonthCalculation {
 
     }
 
-    public AnnuityMonthCalculation(AnnuityMonthCalculation lastCalculation){
+    public AnnuitySeparateCalculation(ISeparateCalculation lastCalculation){
         _lastCalculation = lastCalculation;
         _months = lastCalculation.getMonths();
         _percentMonth = lastCalculation.getPercentMonth();
@@ -35,18 +35,22 @@ public class AnnuityMonthCalculation {
 
     }
 
+    @Override
     public int getMonths() {
         return _months;
     }
 
+    @Override
     public double getPercentMonth() {
         return _percentMonth;
     }
 
-    public AnnuityMonthCalculation getLastCalculation() {
+    @Override
+    public ISeparateCalculation getLastCalculation() {
         return _lastCalculation;
     }
 
+    @Override
     public IPayment getPayment(){
         return _payment;
     }
