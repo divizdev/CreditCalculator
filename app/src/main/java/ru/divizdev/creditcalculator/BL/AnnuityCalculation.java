@@ -9,7 +9,6 @@ import java.util.List;
  */
 public class AnnuityCalculation implements ICalculation {
 
-    private final IPayment _nullPayment = new Payment(0, 0, 0);
 
     private final OptionsCredit _optionsCredit;
     private final List<IPayment> _paymentList;
@@ -125,7 +124,7 @@ public class AnnuityCalculation implements ICalculation {
         if (isCorrectIndex(index)) {
             return _paymentList.get(index);
         }
-        return _nullPayment;
+        return Payment.getNullPayment();
     }
 
     private boolean isCorrectIndex(int index) {

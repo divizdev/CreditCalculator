@@ -6,10 +6,10 @@ package ru.divizdev.creditcalculator.BL;
  */
 public class Payment implements IPayment {
 
+    private static IPayment _nullPayment = new Payment(0, 0, 0);
     private final double _balance;
     private final double _percent;
     private final double _debt;
-
 
 
     /**
@@ -24,7 +24,9 @@ public class Payment implements IPayment {
         _debt = debt;
     }
 
-
+    public static IPayment getNullPayment(){
+        return _nullPayment;
+    }
 
     @Override
     public double getBalance() {

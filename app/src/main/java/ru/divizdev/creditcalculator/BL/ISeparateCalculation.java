@@ -9,5 +9,7 @@ public interface ISeparateCalculation {
 
     IPayment getPayment();
 
+    double getMonthlyPayment();
+
     OptionsCredit getOptionsCredit();
 }
