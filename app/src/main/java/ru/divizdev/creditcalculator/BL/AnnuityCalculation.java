@@ -11,22 +11,24 @@ public class AnnuityCalculation implements ICalculation {
 
     private final IPayment _nullPayment = new Payment(0, 0, 0);
 
+    private final OptionsCredit _optionsCredit;
     private final List<IPayment> _paymentList;
-    private final int _months;
-    private final double _percentMonth;
 
 
-    AnnuityCalculation(int months, double interestRate, double amountCredit) {
-        _percentMonth = interestRate / 12f / 100f;
-        _months = months;
-        _paymentList = new ArrayList<>(months);
 
-        double balance = amountCredit;
-        double monthlyPayment = calcMonthlyPayment(months, balance, _percentMonth);
 
-        for (int i = 0; i < _months; i++) {
+    public AnnuityCalculation(OptionsCredit optionsCredit) {
+        _optionsCredit = optionsCredit;
 
-            double percent = balance * _percentMonth;
+ 
+        _paymentList = new ArrayList<>(_optionsCredit.getMonths());
+
+        double balance = _optionsCredit.getAmountCredit();
+        double monthlyPayment = calcMonthlyPayment(_optionsCredit.getMonths(), balance, _optionsCredit.getPercentMonth());
+
+        for (int i = 0; i < _optionsCredit.getMonths(); i++) {
+
+            double percent = balance * _optionsCredit.getPercentMonth();
             double debt = monthlyPayment - percent;
 
             if (debt > balance) {
@@ -37,7 +39,9 @@ public class AnnuityCalculation implements ICalculation {
 
             balance -= debt;
         }
+
     }
+
 
     /**
      * Переплата с уменьшением срока
@@ -56,8 +60,8 @@ public class AnnuityCalculation implements ICalculation {
         double newBalance = lastPayment.getBalance() - (lastPayment.getDebt() + delta);
         double monthlyPayment = lastPayment.getAmount();
 
-        for (int i = index + 1; i < _months; i++) {
-            double percent = newBalance * _percentMonth;
+        for (int i = index + 1; i < _optionsCredit.getMonths(); i++) {
+            double percent = newBalance * _optionsCredit.getPercentMonth();
             double debt = monthlyPayment - percent;
 
             if (debt > newBalance) {
@@ -85,10 +89,10 @@ public class AnnuityCalculation implements ICalculation {
                 lastPayment.getDebt() + delta));
 
         double newBalance = (lastPayment.getBalance() - (lastPayment.getDebt() + delta));
-        double monthlyPayment = calcMonthlyPayment(_months - index - 1, newBalance, _percentMonth);
+        double monthlyPayment = calcMonthlyPayment(_optionsCredit.getMonths() - index - 1, newBalance, _optionsCredit.getPercentMonth());
 
-        for (int i = index + 1; i < _months; i++) {
-            double percent = newBalance * _percentMonth;
+        for (int i = index + 1; i < _optionsCredit.getMonths(); i++) {
+            double percent = newBalance * _optionsCredit.getPercentMonth();
             double debt = monthlyPayment - percent;
             if (debt > newBalance) {
                 debt = newBalance;
@@ -125,7 +129,7 @@ public class AnnuityCalculation implements ICalculation {
     }
 
     private boolean isCorrectIndex(int index) {
-        return index >= 0 && index < _months;
+        return index >= 0 && index < _optionsCredit.getMonths();
     }
 
     /**

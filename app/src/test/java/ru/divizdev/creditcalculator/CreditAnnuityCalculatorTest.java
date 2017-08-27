@@ -49,7 +49,9 @@ public class CreditAnnuityCalculatorTest {
     public void setUp() {
         _calc = new Calculator();
 
-        _calculation = _calc.calculation(6, 10, 100000);
+        OptionsCredit optionsCredit = new OptionsCredit(6, 10, 100000);
+
+        _calculation = _calc.calculation(optionsCredit);
     }
 
 
@@ -249,9 +251,19 @@ public class CreditAnnuityCalculatorTest {
     @Test
     public void testSeparateCalculation() throws Exception {
 
-        ISeparateCalculation separateCalculation = new AnnuitySeparateCalculation(6, 10, 100000);
-        assertEquals(17156.14, separateCalculation.getPayment().getAmount(), 2);
+        OptionsCredit optionsCredit = new OptionsCredit(6, 10, 100000);
 
+        ISeparateCalculation separateCalculationFirst = new AnnuitySeparateCalculation(optionsCredit);
+        assertEquals("Не верный платеж",17156.14, separateCalculationFirst.getPayment().getAmount(), 2);
+        assertEquals("Не верный процент", 833.33, separateCalculationFirst.getPayment().getPercent(), 2);
+        assertEquals("Не верный основной долг", 100000, separateCalculationFirst.getPayment().getBalance(), 2);
+        assertEquals("Не верный основной плтаеж", 16322.81, separateCalculationFirst.getPayment().getDebt(), 2);
+
+        ISeparateCalculation separateCalculationSecond = new AnnuitySeparateCalculation(separateCalculationFirst);
+        assertEquals("Не верный платеж",17156.14, separateCalculationSecond.getPayment().getAmount(), 2);
+        assertEquals("Не верный процент", 697.31, separateCalculationSecond.getPayment().getPercent(), 2);
+        assertEquals("Не верный основной долг", 83677.19, separateCalculationSecond.getPayment().getBalance(), 2);
+        assertEquals("Не верный основной плтаеж", 16458.83, separateCalculationSecond.getPayment().getDebt(), 2);
     }
 
 

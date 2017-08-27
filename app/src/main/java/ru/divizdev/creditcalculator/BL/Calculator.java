@@ -5,6 +5,11 @@ package ru.divizdev.creditcalculator.BL;
  */
 public class Calculator {
     public ICalculation calculation(int months, int interestRate, int amountCredit) {
-        return new AnnuityCalculation(months, interestRate, amountCredit);
+        OptionsCredit optionsCredit = new OptionsCredit(months, interestRate, amountCredit);
+        return new AnnuityCalculation(optionsCredit);
+    }
+
+    public ICalculation calculation(OptionsCredit optionsCredit) {
+        return new AnnuityCalculation(optionsCredit);
     }
 }
