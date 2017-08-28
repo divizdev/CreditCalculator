@@ -285,15 +285,7 @@ public class CreditAnnuityCalculatorTest {
 
     }
 
-    @Test
-    public void testCalculationObligatoryPayment() throws Exception{
-        OptionsCredit optionsCredit = new OptionsCredit(6, 10, 100000);
 
-        ICalculationObligatoryPayment calculationObligatoryPayment = new AnnuityCalculationObligatoryPayment();
-        double payment = calculationObligatoryPayment.calcObligatoryPayment(optionsCredit);
-        assertEquals("Не верный платеж",17156.14, payment, 2);
-
-    }
 
 
 }
