@@ -29,5 +29,11 @@ public interface IPayment {
      */
     double getAmount();
 
+    /**
+     * Обязательный платеж
+     * @return
+     */
+    double getObligatoryPayment();
+
 
 }

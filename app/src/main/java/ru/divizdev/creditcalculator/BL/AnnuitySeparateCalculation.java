@@ -3,7 +3,7 @@ package ru.divizdev.creditcalculator.BL;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-public class AnnuitySeparateCalculation implements ISeparateCalculation {
+public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
 
 
     private final OptionsCredit _optionsCredit;
@@ -13,12 +13,13 @@ public class AnnuitySeparateCalculation implements ISeparateCalculation {
     private IPayment _payment;
 
     public AnnuitySeparateCalculation(@NonNull ISeparateCalculation lastCalculation) {
+
         _lastCalculation = lastCalculation;
         _optionsCredit = lastCalculation.getOptionsCredit();
 
         double balance = _lastCalculation.getPayment().getBalance() - _lastCalculation.getPayment().getDebt();
 
-        _monthlyPayment = _lastCalculation.getMonthlyPayment();
+        _monthlyPayment = _lastCalculation.getObligatoryPayment();
         _payment = calcPayment(balance, _monthlyPayment);
     }
 
@@ -26,7 +27,7 @@ public class AnnuitySeparateCalculation implements ISeparateCalculation {
 
         _lastCalculation = null;
         _optionsCredit = optionsCredit;
-        _monthlyPayment = calcMonthlyPayment(_optionsCredit);
+        _monthlyPayment = calcObligatoryPayment(_optionsCredit);
 
         _payment = calcPayment(_optionsCredit.getAmountCredit(), _monthlyPayment);
     }
@@ -63,16 +64,8 @@ public class AnnuitySeparateCalculation implements ISeparateCalculation {
     }
 
     @Override
-    public double getMonthlyPayment() {
-        return _monthlyPayment;
+    public double getObligatoryPayment() {
+        return _payment.getObligatoryPayment();
     }
-
-    private double calcMonthlyPayment(OptionsCredit optionsCredit) {
-        int months = optionsCredit.getMonths();
-        double amountCredit = optionsCredit.getAmountCredit();
-        double percentMonth = optionsCredit.getPercentMonth();
-        return amountCredit * (percentMonth + percentMonth / (Math.pow((1 + percentMonth), months) - 1));
-    }
-
 
 }

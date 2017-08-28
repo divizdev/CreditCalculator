@@ -283,6 +283,15 @@ public class CreditAnnuityCalculatorTest {
         assertEquals("Не верный основной долг", 47778.52,   separateCalculationFinish.getPayment().getBalance(), 2);
         assertEquals("Не верный основной плтаеж", 15794.19, separateCalculationFinish.getPayment().getDebt(), 2);
 
+    }
+
+    @Test
+    public void testCalculationObligatoryPayment() throws Exception{
+        OptionsCredit optionsCredit = new OptionsCredit(6, 10, 100000);
+
+        ICalculationObligatoryPayment calculationObligatoryPayment = new AnnuityCalculationObligatoryPayment();
+        double payment = calculationObligatoryPayment.calcObligatoryPayment(optionsCredit);
+        assertEquals("Не верный платеж",17156.14, payment, 2);
 
     }
 

@@ -10,6 +10,7 @@ public class Payment implements IPayment {
     private final double _balance;
     private final double _percent;
     private final double _debt;
+    private final double _obligatoryPayment;
 
 
     /**
@@ -19,9 +20,14 @@ public class Payment implements IPayment {
      */
     Payment(double balance, double percent, double debt) {
 
+        this(balance, percent, debt, debt+percent);
+    }
+
+    Payment(double balance, double percent, double debt, double obligatoryPayment){
         _balance = balance;
         _percent = percent;
         _debt = debt;
+        _obligatoryPayment = obligatoryPayment;
     }
 
     public static IPayment getNullPayment(){
@@ -46,5 +52,10 @@ public class Payment implements IPayment {
     @Override
     public double getAmount() {
         return _percent + _debt;
+    }
+
+    @Override
+    public double getObligatoryPayment() {
+        return _obligatoryPayment;
     }
 }
