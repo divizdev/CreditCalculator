@@ -101,6 +101,8 @@ public class AnnuityCalculation implements ICalculation {
         }
 
 
+
+
     }
 
     private double calcMonthlyPayment(int months, double amountCredit, double percentMonth) {

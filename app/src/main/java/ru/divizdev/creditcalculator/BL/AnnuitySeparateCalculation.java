@@ -6,11 +6,19 @@ import android.support.annotation.Nullable;
 public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
 
 
-    private final OptionsCredit _optionsCredit;
     @Nullable
     private final ISeparateCalculation _lastCalculation;
     private final double _monthlyPayment;
-    private IPayment _payment;
+
+    protected OptionsCredit _optionsCredit;
+    protected IPayment _payment;
+
+    protected AnnuitySeparateCalculation() {
+        _optionsCredit = null;
+        _lastCalculation = null;
+        _monthlyPayment = 0;
+
+    }
 
     public AnnuitySeparateCalculation(@NonNull ISeparateCalculation lastCalculation) {
 

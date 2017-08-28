@@ -18,12 +18,12 @@ public class Payment implements IPayment {
      * @param percent - проценты
      * @param debt    - основной платеж
      */
-    Payment(double balance, double percent, double debt) {
+    public Payment(double balance, double percent, double debt) {
 
         this(balance, percent, debt, debt+percent);
     }
 
-    Payment(double balance, double percent, double debt, double obligatoryPayment){
+   public Payment(double balance, double percent, double debt, double obligatoryPayment){
         _balance = balance;
         _percent = percent;
         _debt = debt;

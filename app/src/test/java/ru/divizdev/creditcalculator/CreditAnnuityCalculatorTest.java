@@ -162,8 +162,8 @@ public class CreditAnnuityCalculatorTest {
 
         _calculation.setRepayment(2, 20000, TypeRepayment.DecreasePayment);
 
-        assertEquals("Не верный остаток на начало периода",67218.36,
-                _calculation.getPayment(2).getBalance(),2 );
+        assertEquals("Не верный остаток на начало периода", 67218.36,
+                _calculation.getPayment(2).getBalance(), 2);
 
         assertEquals(20000, _calculation.getPayment(2).getAmount(), 2);
         assertEquals(16192.34, _calculation.getPayment(3).getAmount(), 2);
@@ -174,12 +174,12 @@ public class CreditAnnuityCalculatorTest {
         assertEquals(16058.52, _calculation.getPayment(5).getBalance(), 2);
 
         assertEquals(15794.19, _calculation.getPayment(3).getDebt(), 2);
-        assertEquals(15925.81, _calculation.getPayment(4).getDebt(),2);
-        assertEquals(16058.52, _calculation.getPayment(5).getDebt(),2);
+        assertEquals(15925.81, _calculation.getPayment(4).getDebt(), 2);
+        assertEquals(16058.52, _calculation.getPayment(5).getDebt(), 2);
 
-        assertEquals(398.15, _calculation.getPayment(3).getPercent(),2);
-        assertEquals(266.54, _calculation.getPayment(4).getPercent(),2);
-        assertEquals(133.82, _calculation.getPayment(5).getPercent(),2);
+        assertEquals(398.15, _calculation.getPayment(3).getPercent(), 2);
+        assertEquals(266.54, _calculation.getPayment(4).getPercent(), 2);
+        assertEquals(133.82, _calculation.getPayment(5).getPercent(), 2);
     }
 
     /**
@@ -195,7 +195,7 @@ public class CreditAnnuityCalculatorTest {
         assertEquals("Не верный остаток на начало периода", 67218.36,
                 _calculation.getPayment(2).getBalance(), 2);
 
-        assertEquals("Не верный общий платеж",33890.43, _calculation.getPayment(2).getAmount(), 2);
+        assertEquals("Не верный общий платеж", 33890.43, _calculation.getPayment(2).getAmount(), 2);
 
         assertEquals(33330.28, _calculation.getPayment(2).getDebt(), 2);
         assertEquals(16873.74, _calculation.getPayment(3).getDebt(), 2);
@@ -230,7 +230,7 @@ public class CreditAnnuityCalculatorTest {
 
         assertEquals(19439.85, _calculation.getPayment(2).getDebt(), 2);
         assertEquals(31720.00, _calculation.getPayment(3).getDebt(), 2);
-        assertEquals(16058.52 , _calculation.getPayment(4).getDebt(), 2);
+        assertEquals(16058.52, _calculation.getPayment(4).getDebt(), 2);
         assertEquals(0.00, _calculation.getPayment(5).getDebt(), 2);
 
     }
@@ -254,38 +254,49 @@ public class CreditAnnuityCalculatorTest {
         OptionsCredit optionsCredit = new OptionsCredit(6, 10, 100000);
 
         ISeparateCalculation separateCalculationFirst = new AnnuitySeparateCalculation(optionsCredit);
-        assertEquals("Не верный платеж",17156.14, separateCalculationFirst.getPayment().getAmount(), 2);
+        assertEquals("Не верный платеж", 17156.14, separateCalculationFirst.getPayment().getAmount(), 2);
         assertEquals("Не верный процент", 833.33, separateCalculationFirst.getPayment().getPercent(), 2);
         assertEquals("Не верный основной долг", 100000, separateCalculationFirst.getPayment().getBalance(), 2);
         assertEquals("Не верный основной плтаеж", 16322.81, separateCalculationFirst.getPayment().getDebt(), 2);
 
         ISeparateCalculation separateCalculationSecond = new AnnuitySeparateCalculation(separateCalculationFirst);
-        assertEquals("Не верный платеж",17156.14, separateCalculationSecond.getPayment().getAmount(), 2);
+        assertEquals("Не верный платеж", 17156.14, separateCalculationSecond.getPayment().getAmount(), 2);
         assertEquals("Не верный процент", 697.31, separateCalculationSecond.getPayment().getPercent(), 2);
         assertEquals("Не верный основной долг", 83677.19, separateCalculationSecond.getPayment().getBalance(), 2);
         assertEquals("Не верный основной плтаеж", 16458.83, separateCalculationSecond.getPayment().getDebt(), 2);
 
         ISeparateCalculation separateCalculationThird = new AnnuitySeparateCalculation(separateCalculationSecond);
-        assertEquals("Не верный платеж",17156.14,           separateCalculationThird.getPayment().getAmount(), 2);
-        assertEquals("Не верный процент", 560.15,           separateCalculationThird.getPayment().getPercent(), 2);
-        assertEquals("Не верный основной долг", 67218.36,   separateCalculationThird.getPayment().getBalance(), 2);
+        assertEquals("Не верный платеж", 17156.14, separateCalculationThird.getPayment().getAmount(), 2);
+        assertEquals("Не верный процент", 560.15, separateCalculationThird.getPayment().getPercent(), 2);
+        assertEquals("Не верный основной долг", 67218.36, separateCalculationThird.getPayment().getBalance(), 2);
         assertEquals("Не верный основной плтаеж", 16595.99, separateCalculationThird.getPayment().getDebt(), 2);
 
         ISeparateCalculation separateCalculationEarlyRepaymentDecreasePayment = new AnnuitySeparateCalculationDecreasePayment(separateCalculationThird, 20000);
-        assertEquals("Не верный платеж",20000,           separateCalculationEarlyRepaymentDecreasePayment.getPayment().getAmount(), 2);
-        assertEquals("Не верный процент", 560.15,           separateCalculationEarlyRepaymentDecreasePayment.getPayment().getPercent(), 2);
-        assertEquals("Не верный основной долг", 67218.36,   separateCalculationEarlyRepaymentDecreasePayment.getPayment().getBalance(), 2);
+        assertEquals("Не верный платеж", 20000, separateCalculationEarlyRepaymentDecreasePayment.getPayment().getAmount(), 2);
+        assertEquals("Не верный процент", 560.15, separateCalculationEarlyRepaymentDecreasePayment.getPayment().getPercent(), 2);
+        assertEquals("Не верный основной долг", 67218.36, separateCalculationEarlyRepaymentDecreasePayment.getPayment().getBalance(), 2);
         assertEquals("Не верный основной плтаеж", 19439.85, separateCalculationEarlyRepaymentDecreasePayment.getPayment().getDebt(), 2);
 
-        ISeparateCalculation separateCalculationFinish = new AnnuitySeparateCalculation(separateCalculationEarlyRepaymentDecreasePayment);
-        assertEquals("Не верный платеж",16192.34,           separateCalculationFinish.getPayment().getAmount(), 2);
-        assertEquals("Не верный процент", 398.15,           separateCalculationFinish.getPayment().getPercent(), 2);
-        assertEquals("Не верный основной долг", 47778.52,   separateCalculationFinish.getPayment().getBalance(), 2);
-        assertEquals("Не верный основной плтаеж", 15794.19, separateCalculationFinish.getPayment().getDebt(), 2);
+        ISeparateCalculation separateCalculationFourth = new AnnuitySeparateCalculation(separateCalculationEarlyRepaymentDecreasePayment);
+        assertEquals("Не верный платеж", 16192.34, separateCalculationFourth.getPayment().getAmount(), 2);
+        assertEquals("Не верный процент", 398.15, separateCalculationFourth.getPayment().getPercent(), 2);
+        assertEquals("Не верный основной долг", 47778.52, separateCalculationFourth.getPayment().getBalance(), 2);
+        assertEquals("Не верный основной плтаеж", 15794.19, separateCalculationFourth.getPayment().getDebt(), 2);
+
+
+        ISeparateCalculation separateCalculationEarlyRepaymentDecreaseTerm = new AnnuitySeparateCalculationDecreaseTerm(separateCalculationFourth, 32118.15);
+        assertEquals("Не верный платеж", 32118.15, separateCalculationEarlyRepaymentDecreaseTerm.getPayment().getAmount(), 2);
+        assertEquals("Не верный процент", 398.15, separateCalculationEarlyRepaymentDecreaseTerm.getPayment().getPercent(), 2);
+        assertEquals("Не верный основной долг", 47778.52, separateCalculationEarlyRepaymentDecreaseTerm.getPayment().getBalance(), 2);
+        assertEquals("Не верный основной плтаеж", 31720.00, separateCalculationEarlyRepaymentDecreaseTerm.getPayment().getDebt(), 2);
+
+        ISeparateCalculation separateCalculationFifth = new AnnuitySeparateCalculation(separateCalculationEarlyRepaymentDecreaseTerm);
+        assertEquals("Не верный платеж", 16192.34, separateCalculationFifth.getPayment().getAmount(), 2);
+        assertEquals("Не верный процент", 133.82, separateCalculationFifth.getPayment().getPercent(), 2);
+        assertEquals("Не верный основной долг", 16058.52, separateCalculationFifth.getPayment().getBalance(), 2);
+        assertEquals("Не верный основной плтаеж", 16058.52, separateCalculationFifth.getPayment().getDebt(), 2);
 
     }
-
-
 
 
 }
