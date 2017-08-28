@@ -27,7 +27,7 @@ public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
 
         double balance = _lastCalculation.getPayment().getBalance() - _lastCalculation.getPayment().getDebt();
 
-        _monthlyPayment = _lastCalculation.getObligatoryPayment();
+        _monthlyPayment = _lastCalculation.getPayment().getObligatoryPayment();
         _payment = calcPayment(balance, _monthlyPayment);
     }
 
@@ -41,7 +41,7 @@ public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
     }
 
     private IPayment calcPayment(double balance, double payment) {
-        double percent = balance * getPercentMonth();
+        double percent = balance * getOptionsCredit().getPercentMonth();
         double debt = payment - percent;
         return (new Payment(balance, percent, debt));
     }
@@ -49,16 +49,6 @@ public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
     @Override
     public OptionsCredit getOptionsCredit() {
         return _optionsCredit;
-    }
-
-    @Override
-    public int getMonths() {
-        return _optionsCredit.getMonths();
-    }
-
-    @Override
-    public double getPercentMonth() {
-        return _optionsCredit.getPercentMonth();
     }
 
     @Override
@@ -71,9 +61,6 @@ public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
         return _payment;
     }
 
-    @Override
-    public double getObligatoryPayment() {
-        return _payment.getObligatoryPayment();
-    }
+
 
 }

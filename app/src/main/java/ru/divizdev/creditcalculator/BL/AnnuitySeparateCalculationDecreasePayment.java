@@ -16,11 +16,11 @@ public class AnnuitySeparateCalculationDecreasePayment extends AnnuitySeparateCa
         int index = getIndex();
 
 
-        double percent = separateCalculation.getPayment().getBalance() * separateCalculation.getPercentMonth();
+        double percent = separateCalculation.getPayment().getBalance() * separateCalculation.getOptionsCredit().getPercentMonth();
         double debt = payment - percent;
 
 
-        OptionsCredit optionsCredit = new OptionsCredit(separateCalculation.getMonths() - index - 1,
+        OptionsCredit optionsCredit = new OptionsCredit(separateCalculation.getOptionsCredit().getMonths() - index - 1,
                 separateCalculation.getOptionsCredit().getInterestRate(), separateCalculation.getPayment().getBalance() - debt);
 
         double monthlyPayment = calcObligatoryPayment(optionsCredit);
