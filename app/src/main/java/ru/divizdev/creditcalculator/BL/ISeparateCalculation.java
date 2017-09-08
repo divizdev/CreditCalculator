@@ -8,5 +8,9 @@ public interface ISeparateCalculation {
 
     OptionsCredit getOptionsCredit();
 
+    void recalc();
+
+    void recalc(ISeparateCalculation lastCalculation);
+
 
 }

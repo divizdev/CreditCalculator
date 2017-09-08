@@ -6,17 +6,14 @@ import android.support.annotation.Nullable;
 public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
 
 
-    @Nullable
-    private final ISeparateCalculation _lastCalculation;
-    private final double _monthlyPayment;
-
     protected OptionsCredit _optionsCredit;
     protected IPayment _payment;
+    @Nullable
+    private ISeparateCalculation _lastCalculation;
 
     protected AnnuitySeparateCalculation() {
         _optionsCredit = null;
         _lastCalculation = null;
-        _monthlyPayment = 0;
 
     }
 
@@ -27,20 +24,24 @@ public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
 
         double balance = _lastCalculation.getPayment().getBalance() - _lastCalculation.getPayment().getDebt();
 
-        _monthlyPayment = _lastCalculation.getPayment().getObligatoryPayment();
-        _payment = calcPayment(balance, _monthlyPayment);
+        double obligatoryPayment = _lastCalculation.getPayment().getObligatoryPayment();
+        _payment = calcPayment(balance, obligatoryPayment);
     }
 
     public AnnuitySeparateCalculation(OptionsCredit optionsCredit) {
 
         _lastCalculation = null;
         _optionsCredit = optionsCredit;
-        _monthlyPayment = calcObligatoryPayment(_optionsCredit);
+        double obligatoryPayment = calcObligatoryPayment(_optionsCredit);
 
-        _payment = calcPayment(_optionsCredit.getAmountCredit(), _monthlyPayment);
+        _payment = calcPayment(_optionsCredit.getAmountCredit(), obligatoryPayment);
     }
 
     private IPayment calcPayment(double balance, double payment) {
+
+        if (balance < 1e-3) {
+            return Payment.getNullPayment();
+        }
         double percent = balance * getOptionsCredit().getPercentMonth();
         double debt = payment - percent;
         return (new Payment(balance, percent, debt));
@@ -52,6 +53,27 @@ public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
     }
 
     @Override
+    public void recalc() {
+        if (_lastCalculation != null) {
+
+            double balance = _lastCalculation.getPayment().getBalance() - _lastCalculation.getPayment().getDebt();
+
+            double obligatoryPayment = _lastCalculation.getPayment().getObligatoryPayment();
+            _payment = calcPayment(balance, obligatoryPayment);
+
+        } else {
+            double obligatoryPayment = calcObligatoryPayment(_optionsCredit);
+            _payment = calcPayment(_optionsCredit.getAmountCredit(), obligatoryPayment);
+        }
+    }
+
+    @Override
+    public void recalc(ISeparateCalculation lastCalculation) {
+        _lastCalculation = lastCalculation;
+        recalc();
+    }
+
+    @Override
     public ISeparateCalculation getLastCalculation() {
         return _lastCalculation;
     }
@@ -60,7 +82,6 @@ public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
     public IPayment getPayment() {
         return _payment;
     }
-
 
 
 }

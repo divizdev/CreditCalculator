@@ -6,7 +6,6 @@ package ru.divizdev.creditcalculator.BL;
 public abstract class AbstractSeparateCalculation implements ISeparateCalculation {
 
 
-
     protected int getIndex() {
         int index = 0;
         ISeparateCalculation last = getLastCalculation();

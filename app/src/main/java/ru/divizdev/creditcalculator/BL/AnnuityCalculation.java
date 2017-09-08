@@ -11,111 +11,35 @@ public class AnnuityCalculation implements ICalculation {
 
 
     private final OptionsCredit _optionsCredit;
-    private final List<IPayment> _paymentList;
-
-
+    private final List<ISeparateCalculation> _paymentList;
 
 
     public AnnuityCalculation(OptionsCredit optionsCredit) {
         _optionsCredit = optionsCredit;
 
- 
+
         _paymentList = new ArrayList<>(_optionsCredit.getMonths());
 
-        double balance = _optionsCredit.getAmountCredit();
-        double monthlyPayment = calcMonthlyPayment(_optionsCredit.getMonths(), balance, _optionsCredit.getPercentMonth());
+        ISeparateCalculation lastCalculation = new AnnuitySeparateCalculation(_optionsCredit);
+        _paymentList.add(lastCalculation);
 
-        for (int i = 0; i < _optionsCredit.getMonths(); i++) {
+        for (int i = 1; i < _optionsCredit.getMonths(); i++) {
 
-            double percent = balance * _optionsCredit.getPercentMonth();
-            double debt = monthlyPayment - percent;
+            _paymentList.add(new AnnuitySeparateCalculation(lastCalculation));
+            lastCalculation = _paymentList.get(i);
 
-            if (debt > balance) {
-                debt = balance;
-            }
-
-            _paymentList.add(new Payment(balance, percent, debt));
-
-            balance -= debt;
         }
 
     }
 
-
-    /**
-     * Переплата с уменьшением срока
-     *
-     * @param index   месяц, <b>нет</b> проверки на границы
-     * @param payment общая сумма платежа за месяц
-     */
-    private void setDecreaseTerm(int index, double payment) {
-        IPayment lastPayment = getPayment(index);
-        double delta = payment - lastPayment.getAmount();
-
-
-        _paymentList.set(index, new Payment(lastPayment.getBalance(), lastPayment.getPercent(),
-                lastPayment.getDebt() + delta));
-
-        double newBalance = lastPayment.getBalance() - (lastPayment.getDebt() + delta);
-        double monthlyPayment = lastPayment.getAmount();
-
-        for (int i = index + 1; i < _optionsCredit.getMonths(); i++) {
-            double percent = newBalance * _optionsCredit.getPercentMonth();
-            double debt = monthlyPayment - percent;
-
-            if (debt > newBalance) {
-                debt = newBalance;
-            }
-            _paymentList.set(i, new Payment(newBalance, percent, debt));
-            newBalance -= debt;
-        }
-
-
-    }
-
-
-    /**
-     * Переплата с уменьшением платежа
-     *
-     * @param index   месяц, <b>нет</b> проверки на границы
-     * @param payment общая сумма платежа за месяц
-     */
-    private void setDecreasePayment(int index, double payment) {
-        IPayment lastPayment = getPayment(index);
-        double delta = payment - lastPayment.getAmount();
-        _paymentList.set(index, new Payment(lastPayment.getBalance(),
-                lastPayment.getPercent(),
-                lastPayment.getDebt() + delta));
-
-        double newBalance = (lastPayment.getBalance() - (lastPayment.getDebt() + delta));
-        double monthlyPayment = calcMonthlyPayment(_optionsCredit.getMonths() - index - 1, newBalance, _optionsCredit.getPercentMonth());
-
-        for (int i = index + 1; i < _optionsCredit.getMonths(); i++) {
-            double percent = newBalance * _optionsCredit.getPercentMonth();
-            double debt = monthlyPayment - percent;
-            if (debt > newBalance) {
-                debt = newBalance;
-            }
-            _paymentList.set(i, new Payment(newBalance, percent, debt));
-            newBalance -= debt;
-        }
-
-
-
-
-    }
-
-    private double calcMonthlyPayment(int months, double amountCredit, double percentMonth) {
-        return amountCredit * (percentMonth + percentMonth / (Math.pow((1 + percentMonth), months) - 1));
-    }
 
     @Override
     public double getOverpayment() {
 
         double overpayment = 0;
 
-        for (IPayment payment : _paymentList) {
-            overpayment += payment.getPercent();
+        for (ISeparateCalculation separateCalculation : _paymentList) {
+            overpayment += separateCalculation.getPayment().getPercent();
         }
 
         return overpayment;
@@ -124,7 +48,7 @@ public class AnnuityCalculation implements ICalculation {
     @Override
     public IPayment getPayment(int index) {
         if (isCorrectIndex(index)) {
-            return _paymentList.get(index);
+            return _paymentList.get(index).getPayment();
         }
         return Payment.getNullPayment();
     }
@@ -142,15 +66,33 @@ public class AnnuityCalculation implements ICalculation {
      */
     @Override
     public void setRepayment(int index, double payment, TypeRepayment typeRepayment) {
+        ISeparateCalculation newSeparateCalculation;
         if (isCorrectIndex(index)) {
-            switch (typeRepayment) {
-                case DecreaseTerm:
-                    setDecreaseTerm(index, payment);
-                    break;
-                case DecreasePayment:
-                    setDecreasePayment(index, payment);
-                    break;
+            newSeparateCalculation = getSeparationCalculation(index, payment, typeRepayment);
+
+            _paymentList.set(index, newSeparateCalculation);
+
+            if (index + 1 < _paymentList.size()) {
+
+                _paymentList.get(index + 1).recalc(newSeparateCalculation);
+
+                for (int i = index + 2; i < _paymentList.size(); i++) {
+                    _paymentList.get(i).recalc();
+                }
             }
         }
+    }
+
+    private ISeparateCalculation getSeparationCalculation(int index, double payment, TypeRepayment typeRepayment) {
+        ISeparateCalculation indexSeparateCalculation = _paymentList.get(index);
+        switch (typeRepayment) {
+
+            case DecreaseTerm:
+                return new AnnuitySeparateCalculationDecreaseTerm(indexSeparateCalculation, payment);
+            case DecreasePayment:
+                return new AnnuitySeparateCalculationDecreasePayment(indexSeparateCalculation, payment);
+        }
+
+        return null;
     }
 }
