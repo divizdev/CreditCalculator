@@ -3,7 +3,7 @@ package ru.divizdev.creditcalculator.BL;
 /**
  * Created by diviz on 28.08.2017.
  */
-public class AnnuitySeparateCalculationDecreaseTerm extends AnnuitySeparateCalculation {
+public class AnnuitySeparateCalculationDecreaseTerm extends AbstractSeparateCalculation {
 
     private final ISeparateCalculation _separateCalculation;
 
@@ -20,6 +20,15 @@ public class AnnuitySeparateCalculationDecreaseTerm extends AnnuitySeparateCalcu
         return _separateCalculation.getOptionsCredit();
     }
 
+    @Override
+    public void recalc() {
+
+    }
+
+    @Override
+    public void recalc(ISeparateCalculation lastCalculation) {
+
+    }
 
 
     @Override

@@ -1,15 +1,11 @@
 package ru.divizdev.creditcalculator.BL;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
 
 
-    protected OptionsCredit _optionsCredit;
-    protected IPayment _payment;
-    @Nullable
-    private ISeparateCalculation _lastCalculation;
+    public static final double NIL = 1e-3;
 
     protected AnnuitySeparateCalculation() {
         _optionsCredit = null;
@@ -39,7 +35,7 @@ public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
 
     private IPayment calcPayment(double balance, double payment) {
 
-        if (balance < 1e-3) {
+        if (balance < NIL) {
             return Payment.getNullPayment();
         }
         double percent = balance * getOptionsCredit().getPercentMonth();
@@ -73,15 +69,7 @@ public class AnnuitySeparateCalculation extends AbstractSeparateCalculation {
         recalc();
     }
 
-    @Override
-    public ISeparateCalculation getLastCalculation() {
-        return _lastCalculation;
-    }
 
-    @Override
-    public IPayment getPayment() {
-        return _payment;
-    }
 
 
 }

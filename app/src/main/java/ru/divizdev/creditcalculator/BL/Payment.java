@@ -21,9 +21,12 @@ public class Payment implements IPayment {
     public Payment(double balance, double percent, double debt) {
 
         this(balance, percent, debt, debt+percent);
+
+
     }
 
    public Payment(double balance, double percent, double debt, double obligatoryPayment){
+
         _balance = balance;
         _percent = percent;
         _debt = debt;
@@ -58,4 +61,5 @@ public class Payment implements IPayment {
     public double getObligatoryPayment() {
         return _obligatoryPayment;
     }
+
 }
