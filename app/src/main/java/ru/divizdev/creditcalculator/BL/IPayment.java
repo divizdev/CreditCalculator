@@ -6,32 +6,32 @@ package ru.divizdev.creditcalculator.BL;
 public interface IPayment {
 
     /**
-     * Остаток кредита на начало периода
-     * @return
+     *
+     * @return Остаток кредита на начало периода
      */
     double getBalance();
 
     /**
-     * Проценты по кредиту в этом периоде
-     * @return
+     *
+     * @return Проценты по кредиту в этом периоде
      */
     double getPercent();
 
     /**
-     * Основной долг в этом периоде
-     * @return
+     *
+     * @return Основной долг в этом периоде
      */
     double getDebt();
 
     /**
-     * Сумма платежа
-     * @return
+     *
+     * @return Сумма платежа
      */
     double getAmount();
 
     /**
-     * Обязательный платеж
-     * @return
+     *
+     * @return Обязательный платеж
      */
     double getObligatoryPayment();
 

@@ -33,6 +33,11 @@ public class Payment implements IPayment {
         _obligatoryPayment = obligatoryPayment;
     }
 
+
+    /**
+     *
+     * @return Нулевой платеж
+     */
     public static IPayment getNullPayment(){
         return _nullPayment;
     }

@@ -6,13 +6,20 @@ package ru.divizdev.creditcalculator.BL;
 public class AnnuitySeparateCalculationDecreaseTerm extends AbstractSeparateCalculation {
 
     private final ISeparateCalculation _separateCalculation;
+    private final double _repayment;
+
 
     public AnnuitySeparateCalculationDecreaseTerm(ISeparateCalculation separateCalculation, double payment) {
         _separateCalculation = separateCalculation;
+        _repayment = payment;
 
-        double percent = separateCalculation.getPayment().getBalance() * getOptionsCredit().getPercentMonth();
-        double debt = payment - percent;
-        _payment = new Payment(_separateCalculation.getPayment().getBalance(), percent, debt, separateCalculation.getPayment().getObligatoryPayment() );
+        calc();
+    }
+
+    private void calc() {
+        double percent = _separateCalculation.getPayment().getBalance() * getOptionsCredit().getPercentMonth();
+        double debt = _repayment - percent;
+        _payment = new Payment(_separateCalculation.getPayment().getBalance(), percent, debt, _separateCalculation.getPayment().getObligatoryPayment() );
     }
 
     @Override
@@ -20,14 +27,17 @@ public class AnnuitySeparateCalculationDecreaseTerm extends AbstractSeparateCalc
         return _separateCalculation.getOptionsCredit();
     }
 
+
+
     @Override
     public void recalc() {
-
+        calc();
     }
 
     @Override
     public void recalc(ISeparateCalculation lastCalculation) {
-
+        _separateCalculation.recalc(lastCalculation);
+        calc();
     }
 
 

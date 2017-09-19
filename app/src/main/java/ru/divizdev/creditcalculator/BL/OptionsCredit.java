@@ -18,18 +18,35 @@ public class OptionsCredit {
         _amountCredit = amountCredit;
     }
 
+    /**
+     *
+     * @return Длительность кредита
+     */
     public int getMonths() {
         return _months;
     }
 
+
+    /**
+     *
+     * @return процент в месяц
+     */
     public double getPercentMonth() {
         return _percentMonth;
     }
 
+    /**
+     *
+     * @return процентная ставка
+     */
     public double getInterestRate() {
         return _interestRate;
     }
 
+    /**
+     *
+     * @return Сумма кредита
+     */
     public double getAmountCredit() {
         return _amountCredit;
     }

@@ -223,9 +223,8 @@ public class CreditAnnuityCalculatorTest {
     @Test
     public void testPartiallyEarlyRepaymentDecreaseTermAndPayment() throws Exception {
 
-        _calculation.setRepayment(2, 20000, TypeRepayment.DecreasePayment);
-
         _calculation.setRepayment(3, 32118.15, TypeRepayment.DecreaseTerm);
+        _calculation.setRepayment(2, 20000, TypeRepayment.DecreasePayment);
 
 
         assertEquals(19439.85, _calculation.getPayment(2).getDebt(), 2);
