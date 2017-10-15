@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">CreditCalculator</string>
+    <string name="text_amount_credit">Сумма кредита</string>
+    <string name="text_procent">Процентная ставка</string>
+    <string name="text_percent">Процентная ставка</string>
+    <string name="text_period">Период</string>
+    <string name="text_period_year">Год</string>
+    <string name="text_period_month">Месяц</string>
+    <string name="text_calc">Рассчитать</string>
+    <string name="title_activity_detail_credit">DetailCreditActivity</string>
+    <string name="text_monthly_payment">Ежемесячный платеж</string>
+    <array name="text_type_calculation">
+        <item>Аннуитетные платежи</item>
+        <item>Дифференцированный платеж</item>
+    </array>
 </resources>
